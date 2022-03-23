@@ -6,7 +6,7 @@
    <li>🍖Java script</li>
    <li>🥩Unity 2D & 3D</li> 
    <li>🍟Bootstrap & css & html</li>
-   <li>✅ I now working with python more - like #Django & #Selenium & #Telegram_Robot ....
+   <li>✅ I now working with python more - like <p style="color:red;">#Django & #Selenium & #Telegram_Robot .... </p>
  </table>
  
  <h5>Any question: 
