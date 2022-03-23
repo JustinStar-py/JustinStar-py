@@ -6,6 +6,12 @@
    <li>🍖Java script</li>
    <li>🥩Unity 2D & 3D</li> 
    <li>🍟Bootstrap & css & html</li>
+   <li>✅ I now working with python more - like #Django & #Selenium & #Telegram_Robot ....
  </table>
  
- <h5>any Q: <pre> Gmail: justinstar.py@gmail.com / Telegram: @P2P_JS </pre> </h5>
+ <h5>Any question: 
+   <pre> 
+   📧Gmail: justinstar.py@gmail.com 
+   💬Telegram: @P2P_JS
+   </pre> 
+</h5>
