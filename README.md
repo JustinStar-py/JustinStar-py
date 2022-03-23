@@ -1,16 +1,11 @@
-### Hi there 👋
-
-<!--
-**JustinStar-py/JustinStar-py** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+<h4> Hi there.😄  It's Justin!🖐🏻</h4>
+<p> I started programming and working with PC at 12 or 13 and i worked with : </p>
+ <table>
+   <li>🍗Python</li>
+   <li>🍳C#</li>
+   <li>🍖Java script</li>
+   <li>🥩Unity 2D & 3D</li> 
+   <li>🍟Bootstrap & css & html</li>
+ </table>
+ 
+ <h5>any Q: <pre> Gmail: justinstar.py@gmail.com / Telegram: @P2P_JS </pre> </h5>
