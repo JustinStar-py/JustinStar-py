@@ -1,5 +1,5 @@
-<h4> Hi there.😄  It's Justin!🖐🏻</h4>
-<p> I started programming and working with PC at 12 or 13 and i worked with : </p>
+<h4> Hi there.  It's Justin!🖐🏻</h4>
+<p> i worked: </p>
  <table>
    <li>🍗Python</li>
    <li>🍳C#</li>
