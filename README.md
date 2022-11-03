@@ -10,8 +10,10 @@
  </table>
  
  <h5>Any question: 
+   <span>
    <pre> 
    📧Gmail: justinstar.py@gmail.com 
-   💬Telegram: @P2P_JS
+   💬Telegram: @KingofDev
    </pre> 
+   </span>
 </h5>
