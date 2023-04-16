@@ -1,5 +1,5 @@
 <h4> Hi there.  It's Justin!🖐🏻</h4>
-<p> i worked: </p>
+<p> a bit things that i know: </p>
  <table>
    <li>Solidity</li>
    <li>HardHat</li>
