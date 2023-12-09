@@ -1,4 +1,5 @@
-<img src="https://venturebeat.com/wp-content/uploads/2023/11/DALL%C2%B7E-2023-11-09-21.52.50-A-chunky-cyberpunk-laptop-in-a-vector-art-synthwave-style-with-a-small-trollface-meme-displayed-on-the-screen.-The-trollface-meme-is-rendered-entirely.png?fit=400%2C229&strip=all"></img>
+<img src="https://github.com/JustinStar-py/JustinStar-py/assets/86886502/757ac2bc-0ed4-43ee-a150-432633cfd27d" style="width:'100%'"></img>
+
 <h4> Hi there.  It's Justin!🖐🏻</h4>
 <p> My Frameworks and languages: </p>
  <table>
