@@ -17,15 +17,26 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
+    # Users table for GitHub PAT storage
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER PRIMARY KEY,
+            github_token TEXT,
+            github_username TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
     # Projects table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS projects (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
-            name TEXT UNIQUE,
+            name TEXT,
             description TEXT,
             github_repo TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, name)
         )
     ''')
     
@@ -79,6 +90,27 @@ client = OpenAI(
 # ---------------------------------------------------------
 # Helper DB functions
 # ---------------------------------------------------------
+def get_user_github_token(user_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT github_token FROM users WHERE user_id = ?", (user_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else None
+
+def set_user_github_token(user_id, token, username=""):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO users (user_id, github_token, github_username)
+        VALUES (?, ?, ?)
+        ON CONFLICT(user_id) DO UPDATE SET
+            github_token = excluded.github_token,
+            github_username = COALESCE(NULLIF(excluded.github_username, ''), users.github_username)
+    ''', (user_id, token, username))
+    conn.commit()
+    conn.close()
+
 def get_user_state(user_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -153,6 +185,23 @@ def add_message(session_id, role, content):
     conn.commit()
     conn.close()
 
+def revert_last_task(session_id):
+    if not session_id:
+        return False
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    # Delete last assistant response and user prompt pair
+    cursor.execute("SELECT id FROM messages WHERE session_id = ? ORDER BY id DESC LIMIT 2", (session_id,))
+    rows = cursor.fetchall()
+    if rows:
+        ids_to_del = [r[0] for r in rows]
+        cursor.execute(f"DELETE FROM messages WHERE id IN ({','.join('?'*len(ids_to_del))})", ids_to_del)
+        conn.commit()
+        conn.close()
+        return True
+    conn.close()
+    return False
+
 def get_chat_history(session_id, limit=10):
     if not session_id:
         return []
@@ -186,7 +235,7 @@ def get_9router_response(user_text, user_name, session_id, project_info=None):
     try:
         history = get_chat_history(session_id, limit=10)
         
-        system_prompt = f"You are Hermes Agent, talking to Justin (حمیدرضا) in Bale messenger. He is a Next.js developer and manager of NoFap and ice-center.ir. Be concise, friendly, helpful, and reply in Persian."
+        system_prompt = f"You are Hermes Agent, a helpful coding assistant in Bale messenger. User is {user_name}. Be concise, friendly, helpful, and reply in Persian."
         if project_info:
             system_prompt += f"\nActive Project Context: Name='{project_info['name']}', GitHub='{project_info['github_repo']}'."
 
@@ -231,23 +280,43 @@ def handle_command(chat_id, user_id, user_name, text):
     if cmd == "/start" or cmd == "/help":
         menu = (
             f"سلام {user_name} عزیز! 🚀\n\n"
-            "ربات پیشرفته هرمس با قابلیت مدیریت پروژه و گفتگوها آماده است.\n\n"
-            "📋 **دستورات مدیریت پروژه:**\n"
-            "🔹 `/newproject <نام_پروژه> [لینک_گیتهاب]` - تعریف پروژه جدید\n"
-            "🔹 `/projects` - لیست پروژه‌های شما\n"
+            "به دستیار توسعه و کدنویسی هرمس متصل شدید.\n\n"
+            "🔑 **اتصال به گیتهاب:**\n"
+            "🔹 `/set_token <github_pat>` - ثبت توکن گیتهاب شخصی\n\n"
+            "📋 **مدیریت پروژه:**\n"
+            "🔹 `/newproject <نام_پروژه> [لینک_گیتهاب]` - ساخت پروژه\n"
+            "🔹 `/projects` - لیست پروژه‌ها\n"
             "🔹 `/useproject <id>` - انتخاب پروژه فعال\n\n"
-            "💬 **دستورات مدیریت گفتگو:**\n"
-            "🔹 `/newchat <عنوان>` - شروع یک گفتگوی جدید در پروژه فعال\n"
+            "💬 **مدیریت گفتگو و ریورت:**\n"
+            "🔹 `/newchat <عنوان>` - شروع گفتگوی جدید\n"
             "🔹 `/chats` - لیست گفتگوهای پروژه فعال\n"
-            "🔹 `/usechat <id>` - سوییچ به یک گفتگوی خاص\n"
+            "🔹 `/revert` یا `/revert_task` - لغو/بازگشت آخرین پیام و دستور\n"
             "🔹 `/status` - مشاهده وضعیت پروژه و گفتگوی فعال\n"
         )
         send_message(chat_id, menu)
         return True
 
+    elif cmd == "/set_token":
+        if len(parts) < 2:
+            send_message(chat_id, "⚠️ لطفا توکن گیتهاب خود را وارد کنید:\nمثال: `/set_token ghp_...` یا `/set_token github_pat_...`")
+            return True
+        token = parts[1].strip()
+        set_user_github_token(user_id, token)
+        send_message(chat_id, "✅ توکن گیتهاب شما با موفقیت ثبت شد! اکنون تمامی پروژه‌ها و کدهای گیتهاب شما با امنیت کامل قابل دسترسی هستند.")
+        return True
+
+    elif cmd == "/revert" or cmd == "/revert_task":
+        state = get_user_state(user_id)
+        sid = state["session_id"]
+        if revert_last_task(sid):
+            send_message(chat_id, "↩️ **آخرین پیام و پاسخ هوش مصنوعی با موفقیت لغو شد (Reverted).** گفتگو به گام قبل بازگشت.")
+        else:
+            send_message(chat_id, "⚠️ پیامی برای بازگشت در این گفتگو یافت نشد.")
+        return True
+
     elif cmd == "/newproject":
         if len(parts) < 2:
-            send_message(chat_id, "⚠️ لطفا نام پروژه را وارد کنید:\nمثال: `/newproject ice-center https://github.com/user/ice-center`")
+            send_message(chat_id, "⚠️ لطفا نام پروژه را وارد کنید:\nمثال: `/newproject my-app https://github.com/user/my-app`")
             return True
         p_name = parts[1]
         p_repo = parts[2] if len(parts) > 2 else ""
@@ -255,7 +324,7 @@ def handle_command(chat_id, user_id, user_name, text):
         if p_id:
             s_id = create_session(user_id, p_id, f"گفتگوی اصلی {p_name}")
             set_user_state(user_id, project_id=p_id, session_id=s_id)
-            send_message(chat_id, f"✅ پروژه **{p_name}** با موفقیت ساخته شد و به عنوان پروژه فعال انتخاب گردید!\nگفتگوی فعال جدید ایجاد شد (ID: {s_id}).")
+            send_message(chat_id, f"✅ پروژه **{p_name}** با موفقیت ساخته شد و پروژه فعال شد!\nگفتگوی فعال جدید: `{s_id}`.")
         else:
             send_message(chat_id, f"❌ پروژه‌ای با نام {p_name} قبلاً ساخته شده است.")
         return True
@@ -268,7 +337,7 @@ def handle_command(chat_id, user_id, user_name, text):
         msg = "📁 **پروژه‌های شما:**\n\n"
         for pid, pname, prepo in projs:
             repo_str = f" ({prepo})" if prepo else ""
-            msg += f"• ID: `{pid}` | **{pname}**{repo_str}\n  دستور انتخاب: `/useproject {pid}`\n\n"
+            msg += f"• ID: `{pid}` | **{pname}**{repo_str}\n  انتخاب: `/useproject {pid}`\n\n"
         send_message(chat_id, msg)
         return True
 
@@ -277,14 +346,13 @@ def handle_command(chat_id, user_id, user_name, text):
             send_message(chat_id, "⚠️ لطفا ID پروژه را وارد کنید. مثال: `/useproject 1`")
             return True
         pid = int(parts[1])
-        # get project sessions
         sessions = get_sessions(user_id, pid)
         if not sessions:
             sid = create_session(user_id, pid, "گفتگوی عمومی")
         else:
             sid = sessions[0][0]
         set_user_state(user_id, project_id=pid, session_id=sid)
-        send_message(chat_id, f"🔄 پروژه فعال روی ID `{pid}` تنظیم شد. گفتگوی فعال: `{sid}`.")
+        send_message(chat_id, f"🔄 پروژه فعال روی ID `{pid}` تنظیم شد.")
         return True
 
     elif cmd == "/newchat":
@@ -293,7 +361,7 @@ def handle_command(chat_id, user_id, user_name, text):
         title = parts[1] if len(parts) > 1 else "گفتگوی جدید"
         sid = create_session(user_id, pid, title)
         set_user_state(user_id, session_id=sid)
-        send_message(chat_id, f"💬 گفتگوی جدید **{title}** (ID: `{sid}`) ایجاد شد و فعال گردید.")
+        send_message(chat_id, f"💬 گفتگوی جدید **{title}** (ID: `{sid}`) ایجاد شد.")
         return True
 
     elif cmd == "/chats":
@@ -320,7 +388,8 @@ def handle_command(chat_id, user_id, user_name, text):
 
     elif cmd == "/status":
         state = get_user_state(user_id)
-        send_message(chat_id, f"📊 **وضعیت کنونی شما:**\n\n• پروژه فعال ID: `{state['project_id'] or 'انتخاب نشده'}`\n• گفتگوی فعال ID: `{state['session_id'] or 'انتخاب نشده'}`")
+        has_token = "✅ متصل شده" if get_user_github_token(user_id) else "❌ ثبت نشده"
+        send_message(chat_id, f"📊 **وضعیت عمومی شما:**\n\n• اکانت گیتهاب: {has_token}\n• پروژه فعال ID: `{state['project_id'] or 'انتخاب نشده'}`\n• گفتگوی فعال ID: `{state['session_id'] or 'انتخاب نشده'}`")
         return True
 
     return False
@@ -345,26 +414,22 @@ def main():
                 chat_id = message["chat"]["id"]
                 user_id = message["from"]["id"]
                 text = message.get("text", "")
-                user_name = message["from"].get("first_name", "جاستین")
+                user_name = message["from"].get("first_name", "کاربر")
                 
                 print(f"Received from {user_name} ({chat_id}): {text}", flush=True)
                 
-                # Check commands
                 if text.startswith("/"):
                     if handle_command(chat_id, user_id, user_name, text):
                         continue
                 
-                # Normal AI Chat with History and Project Context
                 state = get_user_state(user_id)
                 session_id = state["session_id"]
                 
                 if not session_id:
-                    # Auto create default session
                     pid = state["project_id"] or create_project(user_id, "General", "General Project")
                     session_id = create_session(user_id, pid, "گفتگوی عمومی")
                     set_user_state(user_id, project_id=pid, session_id=session_id)
 
-                # Fetch project details for prompt context
                 project_info = None
                 if state["project_id"]:
                     conn = sqlite3.connect(DB_PATH)
