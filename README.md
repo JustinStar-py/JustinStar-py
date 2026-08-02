@@ -21,10 +21,10 @@
 
 | Category | Technologies |
 | :--- | :--- |
-| **Frontend** |      |
-| **Web3 / Blockchain** |       |
-| **Backend & Automation** |      |
-| **AI & Tools** |      |
+| **Frontend** | `Next.js` `React` `TypeScript` `JavaScript` `TailwindCSS` |
+| **Web3 / Blockchain** | `Solidity` `EVM` `Web3.js` `Ethers.js` `Solana` `Smart Contracts` |
+| **Backend & Automation** | `Python` `Node.js` `Django` `REST APIs` `SQLite/PostgreSQL` |
+| **AI & Tools** | `AI Agents` `Git` `Docker` `Linux` `9router` |
 
 ---
 
