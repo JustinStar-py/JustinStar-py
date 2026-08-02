@@ -1,11 +1,11 @@
 <div align="center">
 
-# 👋 Hi there, I'm Justin!
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Victory%20Hand.png" width="40" /> Hi there, I'm Justin!
 
 ### **Full-Stack Next.js & Web3 / Blockchain Developer**
 
 <p align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZhcXQybXlyNHdpa2pndXRuaTlnMmxicDRxcWRtMXQ3dHhxeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L3X9GvH3D5XY3p86PN/giphy.gif" width="320" alt="Coding GIF" />
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="450" alt="Coding GIF" />
 </p>
 
 [![Telegram Badge](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/P2P_JS)
@@ -13,7 +13,7 @@
 
 ---
 
-### 🛠️ **Tech Stack & Skills**
+### 🛠️ **Tech Stack & Skills** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Alien.png" width="28" />
 
 | Category | Technologies |
 | :--- | :--- |
@@ -23,10 +23,6 @@
 | **AI & Tools** | `AI Agents` `Git` `Docker` `Linux` `9router` |
 
 <br>
-
-<p align="center">
-  <img src="https://media.giphy.com/media/qgQUGGAC3P4O89G16m/giphy.gif" width="300" alt="Work GIF" />
-</p>
 
 ---
 
