@@ -13,18 +13,6 @@
 
 ---
 
-### 🚀 **About Me**
-- 👨‍💻 **Full-Stack Developer** specializing in modern Web applications using **Next.js**, **React**, and **TypeScript**.
-- ⚡ **Web3 & Smart Contract Developer** experienced with **Solidity**, **EVM**, and decentralized applications (dApps).
-- 🛠️ **Community Manager & Project Lead** behind **NoFap Community**, **ice-center.ir**, and **Flash Bot**.
-- 🤖 Passionate about **AI Integration**, **Automation Agent Systems**, and building high-performance tools.
-
-<p align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3JzcW9sN2IxdTFkZmd0NWpxdnYwNmNhYnkxdHRxbHByZnpxb3U3OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qgQUGGAC3P4O89G16m/giphy.gif" width="300" alt="Work GIF" />
-</p>
-
----
-
 ### 🛠️ **Tech Stack & Skills**
 
 | Category | Technologies |
@@ -34,17 +22,10 @@
 | **Backend & Automation** | `Python` `Node.js` `Django` `REST APIs` `SQLite/PostgreSQL` |
 | **AI & Tools** | `AI Agents` `Git` `Docker` `Linux` `9router` |
 
----
-
-### 📈 **GitHub Stats & Activity**
+<br>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=JustinStar-py&show_icons=true&theme=tokyonight&count_private=true" width="48%" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=JustinStar-py&layout=compact&theme=tokyonight&hide=html,css" width="48%" />
-</p>
-
-<p align="center">
-  <img src="https://media.giphy.com/media/13Hgw8T855C22c/giphy.gif" width="280" alt="Funny Coder GIF" />
+  <img src="https://media.giphy.com/media/qgQUGGAC3P4O89G16m/giphy.gif" width="300" alt="Work GIF" />
 </p>
 
 ---
