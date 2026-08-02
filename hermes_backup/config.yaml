@@ -1,0 +1,26 @@
+terminal:
+  backend: local
+  cwd: /data/workspace
+  timeout: 180
+compression:
+  enabled: true
+  threshold: 0.85
+approvals:
+  destructive_slash_confirm: false
+command_allowlist:
+  - script execution via -e/-c flag
+onboarding:
+  seen:
+    profile_build_offered: true
+_config_version: 33
+platforms:
+  telegram:
+    enabled: true
+    home_channel:
+      platform: telegram
+      chat_id: '1887509957'
+      name: It's Justin
+      user_id: '1887509957'
+model:
+  model: my-combo
+  provider: openai-api
